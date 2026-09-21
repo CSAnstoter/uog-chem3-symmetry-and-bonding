@@ -26,7 +26,6 @@ figures in your own notes and revision.
 | `figures/ml6/` | the octahedral complex: operations, SALCs, MOs, vibrations |
 | `figures/orbitals/` | d orbitals, metal AOs, SALCs on the ML framework |
 | `figures/conformers/` | ethane's eclipsed → staggered descent in symmetry |
-| `docs/` | the full worked SALC derivation (LaTeX source and PDF) |
 
 ---
 
