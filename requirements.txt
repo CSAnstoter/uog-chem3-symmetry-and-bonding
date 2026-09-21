@@ -1,0 +1,8 @@
+# Install with:   py -m pip install -r requirements.txt      (Windows)
+#                 python3 -m pip install -r requirements.txt (Mac / Linux)
+#
+# Lower bounds are the oldest versions these scripts are known to work with.
+# Anything newer is fine.
+numpy>=1.20
+matplotlib>=3.5
+pillow>=8.0
