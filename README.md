@@ -1,6 +1,6 @@
 # Symmetry and Bonding — figures and code
 
-Animated GIFs and still figures for **Chem-3 P2: Symmetry and Bonding**, together
+Animated GIFs and still figures for **Chem-3 P1: Symmetry and Bonding**, together
 with the Python that generates them.
 
 Two ways to use this repository:
