@@ -23,6 +23,7 @@ figures in your own notes and revision.
 |---|---|
 | `code/` | the Python scripts |
 | `figures/operations/` | symmetry operations for water, ammonia, methane, ethane, benzene, PF₅ and others |
+| `figures/transformations/` | applications of symmetry operations to specific orbitals and the projection operator method on SALCs |
 | `figures/ml6/` | the octahedral complex: operations, SALCs, MOs, vibrations |
 | `figures/orbitals/` | d orbitals, metal AOs, SALCs on the ML framework |
 | `figures/conformers/` | ethane's eclipsed → staggered descent in symmetry |
