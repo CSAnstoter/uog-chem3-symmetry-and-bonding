@@ -2,8 +2,8 @@
 """
 symmetry_operation_gifs.py
 ==========================
-Animated ball-and-stick GIFs of molecular symmetry operations, written for the 2026/27
-Chem-3 "Symmetry and Bonding" course at the University of Glasgow.
+Animated ball-and-stick GIFs of molecular symmetry operations, written for the
+Chem-3 P2 "Symmetry and Bonding" course.
 
 WHAT IT DOES
 ------------
@@ -2466,12 +2466,54 @@ def render_lowsym(outdir="."):
         out,writer=PlayOnceWriter(fps=FPS))
     plt.close(fig); print("wrote",out); return out
 
+def _hull_faces(V, tol=1e-7):
+    """Polygonal faces of the convex hull of a set of vertices, using only numpy.
+
+    Every polyhedron drawn by this module is convex, so a plane through three of
+    its vertices is a face exactly when all the other vertices lie on one side of
+    it. Coplanar vertices are then collected into a single polygon and ordered
+    round the face, rather than triangulated.
+
+    This replaces scipy.spatial.ConvexHull, so the module needs only numpy,
+    matplotlib and pillow. It also draws better: a triangulated square face
+    overlaps itself, which darkens a translucent face where the triangles meet.
+    """
+    import itertools
+    V = np.asarray(V, float)
+    planes = []
+    for i, j, k in itertools.combinations(range(len(V)), 3):
+        n = np.cross(V[j] - V[i], V[k] - V[i])
+        L = np.linalg.norm(n)
+        if L < tol:
+            continue                                  # the three are collinear
+        n = n / L
+        off = float(n @ V[i])
+        dd = V @ n - off
+        if not (np.all(dd <= tol) or np.all(dd >= -tol)):
+            continue                                  # vertices on both sides
+        if np.all(dd >= -tol):
+            n, off = -n, -off                         # point the normal outward
+        if not any(abs(off - o) < 1e-6 and np.allclose(n, m, atol=1e-6)
+                   for m, o in planes):
+            planes.append((n, off))
+
+    faces = []
+    for n, off in planes:
+        pts = V[np.abs(V @ n - off) < 1e-6]
+        c = pts.mean(axis=0)
+        u = pts[0] - c
+        u = u / np.linalg.norm(u)
+        w = np.cross(n, u)
+        ang = np.arctan2((pts - c) @ w, (pts - c) @ u)
+        faces.append(pts[np.argsort(ang)])
+    return faces
+
+
 def render_high_symmetry(kind, outdir="."):
     """Show a polyhedron, then reveal the molecule that shares its symmetry sitting
     inside it. kind='td' (tetrahedron -> methane), 'oh' (octahedron -> SF6),
     'ih' (icosahedron -> C60). The polyhedron dims to a faint cage as the molecule
     appears, so the shared point group is explicit."""
-    from scipy.spatial import ConvexHull
     from itertools import combinations
     Ph=(1+5**0.5)/2
     def norm(V,R): V=np.array(V,float); return V*(R/np.max(np.linalg.norm(V,axis=1)))
@@ -2525,7 +2567,7 @@ def render_high_symmetry(kind, outdir="."):
         # polyhedron: translucent faces only while it is the focus
         if pa>0.02 and ma<0.5:
             try:
-                hull=ConvexHull(Vp); faces=[Vp[s] for s in hull.simplices]
+                faces=_hull_faces(Vp)
                 ax.add_collection3d(Poly3DCollection(faces,facecolor=col,alpha=0.14*pa,edgecolor="none"))
             except Exception: pass
         for i,j in Ep: ax.plot(*zip(Vp[i],Vp[j]),color=dark,lw=1.6,alpha=0.9*pa,zorder=2)
@@ -2605,7 +2647,6 @@ def render_pointgroup_showcase(outdir="."):
     """Generic 'what is a point group' backdrop: a sequence of rotating polyhedra,
     each labelled with its Schoenflies symbol and order h. Not a specific molecule,
     the point is that different symmetric shapes belong to different point groups."""
-    from scipy.spatial import ConvexHull
     from itertools import combinations
     P=(1+5**0.5)/2
     def norm(V): V=np.array(V,float); return V*(1.1/np.max(np.linalg.norm(V,axis=1)))
@@ -2659,7 +2700,7 @@ def render_pointgroup_showcase(outdir="."):
         ax.clear(); ax.set_xlim(-lim,lim); ax.set_ylim(-lim,lim); ax.set_zlim(-lim,lim)
         ax.set_box_aspect((1,1,1)); ax.set_axis_off(); ax.view_init(elev,azim)
         try:
-            hull=ConvexHull(V); faces=[V[s] for s in hull.simplices]
+            faces=_hull_faces(V)
             ax.add_collection3d(Poly3DCollection(faces,facecolor=fills[si],alpha=0.16*al,edgecolor="none"))
         except Exception:
             pass
