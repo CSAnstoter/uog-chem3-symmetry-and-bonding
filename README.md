@@ -1,6 +1,6 @@
 # Symmetry and Bonding — figures and code
 
-Animated GIFs and still figures for **Chem-3 P1: Symmetry and Bonding**, together
+Animated GIFs and still figures for **Chem-3 P2: Symmetry and Bonding**, together
 with the Python that generates them.
 
 Two ways to use this repository:
@@ -23,10 +23,10 @@ figures in your own notes and revision.
 |---|---|
 | `code/` | the Python scripts |
 | `figures/operations/` | symmetry operations for water, ammonia, methane, ethane, benzene, PF₅ and others |
-| `figures/transformations/` | applications of symmetry operations to specific orbitals and the projection operator method on SALCs |
 | `figures/ml6/` | the octahedral complex: operations, SALCs, MOs, vibrations |
 | `figures/orbitals/` | d orbitals, metal AOs, SALCs on the ML framework |
 | `figures/conformers/` | ethane's eclipsed → staggered descent in symmetry |
+| `docs/` | the full worked SALC derivation (LaTeX source and PDF) |
 
 ---
 
@@ -192,6 +192,10 @@ instead of `python`, which usually works regardless.
 **`No module named 'matplotlib'`** — the packages did not install, or installed
 for a different Python. Run the install command again using exactly the same
 command name (`py` or `python3`) you use to run the scripts.
+
+**`No module named 'scipy'`** — you have an old copy of the code. Download the
+current version; scipy is not needed. If you would rather not re-download,
+`py -m pip install scipy` also fixes it.
 
 **`No module named 'symmetry_operation_gifs'`** — you are running from the wrong
 folder, or `ml6_gifs.py` has been separated from the main engine. They must sit in
